@@ -6,8 +6,9 @@ Gem::Specification.new do |s|
   s.description = "Uses the Twitch provided API to report relevant data"
   s.authors     = ["Nick Herson"]
   s.email       = 'nicholas.herson@gmail.com'
-  s.files       = ["lib/spaz.rb"]
+  s.files       = ["lib/spaz.rb", "lib/spaz/spaz_configuration.rb"]
   s.homepage    =
     'http://github.com/nherson/spaz'
   s.license       = 'none'
+  s.executables << 'spaz'
 end

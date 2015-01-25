@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spaz/spaz_configuration'
+require File.expand_path('spaz/spaz_configuration', File.dirname(__FILE__))
 
 class Spaz
   require 'rest-client'
@@ -16,14 +16,8 @@ class Spaz
   def watch
     streams = list_followed_streams
     puts("")
-    while true
-      choice = ask("Which stream do you want to watch? [None]") { |num| num.default="0", num.validate = /^[0-9]+$/ }.to_i
-      break unless choice > streams.size
-      if choice == 0
-        return
-      end
-    end
-    Launchy.open(streams[choice-1]["channel"]["url"])
+    choice = ask("Choose a stream: ", Integer) { |num| num.in = 1..streams.size}
+    Launchy.open(streams[choice-1]["channel"]["url"]) unless choice==0
   end
 
   def list
@@ -42,7 +36,7 @@ class Spaz
   end
 
   def followed_streams
-    streams = JSON.parse(RestClient.get(TWITCH_API_BASE + "/streams/followed?oauth_token=#{@access_token}").body)["streams"]
+    streams = JSON.parse(RestClient.get(@@twitch_api_base + "/streams/followed?oauth_token=#{@access_token}").body)["streams"]
   end
 
 end

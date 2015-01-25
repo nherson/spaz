@@ -2,7 +2,11 @@ module SpazConfiguration
   require 'highline/import'
   require 'mechanize'
 
-  @scopes = ["user_subscriptions", "user_read"]
+
+  SCOPES = ["user_subscriptions", "user_read"]
+  CLIENT_ID = "l92770tjhgxp9ji1k0ejwovtessqgno"
+  REDIRECT_URI = "http://localhost"
+  TWITCH_IMPLICIT_GRANT_URL = "https://api.twitch.tv/kraken/oauth2/authorize?response_type=token&client_id=#{CLIENT_ID}&redirect_uri=#{REDIRECT_URI}&scope=#{SCOPES.join('+')}"
 
   def configure!(filepath=@conf_path)
     generate_token unless load_config and @access_token and not generate_new_token?
@@ -21,15 +25,16 @@ module SpazConfiguration
   private
 
   def write!
-    @conf_file.close
+    @conf_file.close unless @conf_file.nil?
     @conf_file = File.open(@conf_path, 'w')
     config = {"access_token" => @access_token}
-    @conf_file.write(config)
+    @conf_file.write(config.to_json)
   end
 
   # Routines that involve user prompting
 
   def generate_token
+    mech = Mechanize.new
     auth = twitch_login_info
     oauth_page = mech.get(TWITCH_IMPLICIT_GRANT_URL)
     # The OAuth redirect will fail because we aren't actually accepting

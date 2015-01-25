@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'spaz'
+
+spaz = Spaz.new
+
+valid_subcommands = ['watch', 'list']
+
+subcommand = ARGV[0]
+
+spaz.send(subcommand.to_sym) unless not valid_subcommands.include?(subcommand)
