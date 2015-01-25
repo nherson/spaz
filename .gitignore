@@ -35,3 +35,12 @@ build/
 
 # rbenv files
 .ruby-version
+
+# swp files
+*.swp
+
+# backups
+*.bak
+
+# DS Store
+*.DS_Store
